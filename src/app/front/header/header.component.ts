@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
   ]
 
   allTags: any[];
-	selectedTagIds: any = 'Competitive Programming';
+	selectedTagIds: any[] = ['Career Guidance'];
 
   tagsApi = 'https://api.codingninjas.com/api/v3/event_tags';
   listApi = 'https://api.codingninjas.com/api/v3/events';
