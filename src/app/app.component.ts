@@ -69,13 +69,13 @@ export class AppComponent {
 
   selectedTag(e:any){
     this.selectedTagIds.push(e);
-    console.log('Tags - ',this.selectedTagIds);
+    // console.log('Tags - ',this.selectedTagIds);
     this.showEventCards();
   }
 
   selectedSubCtg(ctg: any){
     this.selectedSubCtgId = ctg;
-    console.log('ctg -', this.selectedSubCtgId)
+    // console.log('ctg -', this.selectedSubCtgId)
     this.showEventCards();
   }
 
