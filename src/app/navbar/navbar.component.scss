@@ -1,0 +1,68 @@
+@import "../../assets/css/bootstrap.min.css";
+
+.btn-white {
+	background-color: #ef7f1a;
+	border-color: #ef7f1a;
+	color: #fff;
+}
+.btn-white:hover {
+	background-color: #001f3f;
+	border-color: #001f3f;
+	color: #fff;
+	text-decoration: none;
+}
+.on-scroll .btn-accent-on-scroll {
+	background-color: #ef7f1a;
+	border-color: #ef7f1a;
+	color: #fff;
+}
+a.nav-link {
+	font: 16px Manrope, sans-serif;
+	padding: 15px 0;
+	color: #001f3f;
+}
+ul,ol {
+	list-style-position: outside;
+	display: block;
+}
+
+.icon-arrow-down:before {
+	content: "\e6fe";
+}
+.iconfont {
+	font-family: "iconfont" !important;
+	font-style: normal;
+	-webkit-font-smoothing: antialiased;
+}
+
+#dtr-header-global {
+	background: #fff;
+    box-shadow: 0 2px 40px 0 hsl(0deg 0% 6% / 5%);
+    padding: 0;
+    border-width: 0;
+	border-style: solid;
+    z-index: 1051;
+}
+
+#dtr-header-global.on-scroll {
+    padding: 0px 0;
+    border-width: 0;
+    box-shadow: 0 2px 40px 0 hsl(0deg 0% 6% / 5%);
+    z-index: 1051;
+}
+
+@media screen and  (min-width: 992px) and (max-width: 1025px) {
+	.navbar-expand-lg .navbar-nav .nav-link {
+		font-family: "Manrope", sans-serif;
+		font-size: 12px;
+		font-weight: 600;
+	}
+}
+@media (min-width: 1025px) {
+	.navbar-expand-lg .navbar-nav .nav-link {
+		font-family: "Manrope", sans-serif;
+		padding: 10px 20px;
+		font-size: 16px;
+		font-weight: 600;
+	}
+}

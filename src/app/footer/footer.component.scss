@@ -1,0 +1,24 @@
+@import '../../assets/css/bootstrap.min.css';
+
+#dtr-footer img{
+    height: 76px;
+    margin-top: 19px;
+    max-width: 100%
+}
+
+.back-white{
+    display: flex;
+    padding: 15px 5px;
+}
+
+.container .row .important-links-section {
+    margin-right: 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.container .row .important-links-section p{
+    margin-bottom: 0px;
+    margin-right: 5px;
+}

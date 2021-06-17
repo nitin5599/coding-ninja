@@ -1,1 +1,183 @@
-<app-header></app-header>
+<!-- navbar starts -->
+
+<header>
+    <app-navbar></app-navbar>
+    <div id="dtr-wrapper" class="clearfix">
+        <div id="dtr-main-content">
+            <section id="home" class="dtr-section dtr-section-with-bg">
+                <div class="container hero-section-top-padding dtr-full-stretch">
+                    <h1 class="color-white">Events & News</h1>
+                    <p class="text-size-md dtr-mt-30 color-white">Learn, Compete & Grow</p>      
+                </div>
+            </section>
+        </div>
+    </div>
+</header>
+
+<!-- navbar ends -->
+
+<!-- main starts -->
+
+<section class="dtr-section dtr-pt-70 dtr-pb-70 dtr-section-with-bg bg-light-blue-alt parallax"
+         style="background-image: url(../../../assets/images/section-bg1.png);">
+    <div class="container"> 
+        
+        <div class="row dtr-features-tab"> 
+            
+            <div class="col-sm-12 d-flex justify-content-center align-items-center mb-5">
+                
+                <!-- events tabs starts -->
+                <div class="nav nav-pills" role="tablist" aria-orientation="vertical">                     
+                    <a *ngFor="let tab of Tabs" (click)="showActiveTab(tab.value)" class="nav-link {{tab.status}}" id="{{tab.value}}-tab" data-toggle="pill" href="#{{tab.value}}" role="tab" aria-controls="features-tab-1" aria-selected="true">
+                        <h5 class="font-weight-600 mb-0">{{tab.name}}</h5>
+                    </a>   
+                </div>
+                <!-- events tabs ends -->
+
+            </div>
+
+            <!-- sub-categories starts -->
+            <ul class="list-unstyled list-inline col-sm-8">
+                <li *ngFor="let ctg of subCtg; let i=index;"(click)="selectedSubCtg(ctg.value)" class="list-inline-item ">
+                    <div  class="chip me-0"  [class.selected]="ctg.value === selectedSubCtgId" >
+                        <p class="mb-0">{{ctg.name}}</p>
+                    </div>
+                </li>
+            </ul>
+            <!-- sub-categories ends -->
+            
+            <!-- tags starts -->
+            <mat-form-field class="col-sm-3" appearance="fill">
+                <mat-label>Tags</mat-label>
+                <mat-select [formControl]="tags" [(value)]="selectedTagIds" multiple>
+                    <mat-select-trigger>
+                    {{tags.value ? tags.value[0] : ''}}
+                    <span *ngIf="tags.value?.length > 1" class="showTags">
+                        (+{{tags.value.length - 1}} {{tags.value?.length === 2 ? 'other' : 'others'}})
+                    </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let tag of allTags" (click)="selectedTag(selectedTagIds)" [value]="tag">{{tag}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <!-- tags ends -->
+
+            <div class="col-sm-12">
+
+            <h2 *ngIf="eventCards.length==0" class="text-center font-weight-700">No Events found</h2>
+            
+            <div class="tab-content" id="v-pills-tabContent"> 
+                
+                <div *ngFor="let tab of Tabs" class="tab-pane fade show {{tab.status}}" id="{{tab.value}}" role="tabpanel" aria-labelledby="features-tab-1-tab">
+                    
+                    <div class="row">
+
+                        <!-- event cards list starts-->
+                        <div *ngFor="let card of eventCards | paginate: { id: 'events',
+                        itemsPerPage: 10,
+                        currentPage: Page,
+                        totalItems: TotalRecords }; let i=index"  class="col-md-4 tablink">
+                            
+                            <div class="dtr-feature feature-has-shadow dtr-rounded-corner-xl bg-white">                   
+                                <div class="img-wrapper">
+                                    <div class="dtr-feature-img mb-0" style="position: relative;">
+                                        <div class="mask"></div>
+                                        <img src="{{card.cover_picture}}" class="card-banner" alt="{{card.name}}"> 
+                                        <div *ngIf="card.registration_status === 'REGISTRATIONS_OPEN'" class="upcoming">
+                                            <div class="d-flex align-items-center">
+                                                <div class="circle"></div>
+                                                <p class="mb-0">Registrations <b>open</b> till <b>{{ card.registration_end_time*1000 | date:' d MMM, h:mm a' }}</b></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dtr-feature-content">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{card.name}}</h5>
+                                        <div class="d-flex justify-content-flex-start sub-head-row">
+                                            <div class="pr-4">
+                                                <p class="sub-head mb-0">Starts on</p>
+                                                <p class="sub-head-des">{{ card.event_start_time*1000 | date:'h:mm a, d MMM y' }}</p>
+                                            </div>
+                                            <div class="pr-4">
+                                                <p class="sub-head mb-0">Entry Fee</p>
+                                                <p class="sub-head-des">{{card.currency}} {{card.fees}}</p>
+                                            </div>
+                                            <div class="">
+                                                <p class="sub-head mb-0">Venue</p>
+                                                <p class="sub-head-des">{{card.venue}}</p>
+                                            </div>
+                                        </div>
+                                        <p style="border-bottom: 1px solid #f3f3f3;"></p>
+                                        <div class="row pb-3" style="min-height: 80px;">
+                                            <p class="card-text card-des mt-0 ">{{card.short_desc}}</p>
+                                        </div>
+                                        <div class="row pb-5" style="min-height: 80px;">
+                                            <ul class="list-unstyled list-inline pl-2">
+                                                <li *ngFor="let tags of card.card_tags;  let i=index;" class="list-inline-item me-0">
+                                                    <div *ngIf="i<=2" class="tag mr-2">{{tags}}</div>
+                                                    <div *ngIf="i>2">
+                                                        <span style="color: orange;font-size: 12px;">
+                                                            +{{card.card_tags.length - 3}} more
+                                                        </span>   
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="row">
+
+                                            <div *ngIf="card.registered_users.show_users_count === true"
+                                             class="card-footer-with-user d-flex justify-content-between p-1">
+                                                <div>
+                                                    <div class="d-flex img-container">
+                                                        <div *ngFor="let user of card.registered_users.top_users">
+                                                            <img *ngIf="user.image_url !== null" src="{{user.image_url}}"
+                                                                data-toggle="tooltip" data-placement="top" title="{{user.name}}">
+                                                            <img *ngIf="user.image_url === null" src="../../../assets/images/user.png"
+                                                                data-toggle="tooltip" data-placement="top" title="{{user.name}}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="count">
+                                                        <p>and <b style="color: black;">{{card.registered_users.other_users_count}}</b>  others registered</p>
+                                                    </div>
+                                                </div>    
+                                                <div class="">
+                                                    <img *ngIf="card.registration_status === 'REGISTRATIONS_OPEN'" src="../../../assets/images/register.png" height="30px" alt="">
+                                                </div>
+                                            </div>
+                                            
+                                            <div *ngIf="card.registered_users.show_users_count === false" class="p-0">          
+                                                <div class="card-footer-no-user pt-1">
+                                                    <img *ngIf="card.registration_status === 'REGISTRATIONS_OPEN'" src="../../../assets/images/register.png" height="30px" alt="">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- event cards list ends-->
+                    </div> 
+
+                    <div class="row">
+                        <div class="col-sm-12 d-flex justify-content-end" >
+                            <pagination-controls *ngIf="eventCards.length != 0" class=" my-pagination" id="events"
+                             (pageChange)="Page = $event" maxSize="10" directionLinks="true"></pagination-controls>
+                        </div>
+                    </div>
+
+                </div>
+        
+            </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- main ends -->
+
+<app-footer></app-footer>
