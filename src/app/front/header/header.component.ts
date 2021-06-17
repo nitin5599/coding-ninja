@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { promise } from 'protractor';
 
 @Component({
   selector: 'app-header',
@@ -23,17 +24,22 @@ export class HeaderComponent implements OnInit {
   ]
 
   allTags: any[];
-	selectedTagIds: any[] = ['Career Guidance'];
+	selectedTagIds: any[] = [];
 
   tagsApi = 'https://api.codingninjas.com/api/v3/event_tags';
   listApi = 'https://api.codingninjas.com/api/v3/events';
   eventTag: any = 'ALL_EVENTS';
   selectedSubCtgId: any = 'Upcoming';
-  
-  constructor(private http: HttpClient) { }
+  eventCards:any[] = [];
 
-  ngOnInit(): void {
-    this.http.get<any>(this.tagsApi).subscribe((data: any) => {
+  constructor(private http: HttpClient) { 
+    }
+
+  async ngOnInit(): Promise<void> {
+    //   let cards =await this.showEventCards().toPromise()
+    //  this.eventCards = cards.data.events;
+    //  console.log(this.eventCards)
+     this.http.get<any>(this.tagsApi).subscribe((data: any) => {
           // console.log(data)
           this.allTags = [...data.data.tags];
       },
@@ -45,11 +51,19 @@ export class HeaderComponent implements OnInit {
   }
 
   showEventCards(){
-    this.http.get<any>(this.listApi+'?event_category='+this.eventTag+'&event_sub_category='+this.selectedSubCtgId+'&tag_list='+this.selectedTagIds+'&offset=0').subscribe((data: any) =>{
-      console.log(data);
-    })
-  }
+    this.http.get<any>(this.listApi+'?event_category='+this.eventTag+'&event_sub_category='+this.selectedSubCtgId+'&tag_list='+this.selectedTagIds+'&offset=0')    
+    .subscribe((res: any) =>{
+        // console.log(res.data.events.length);
+        this.eventCards=res.data.events
+        // for (let index = 0; index < res.data.events.length; index++) {
+        //   this.eventCards.push(res.data.events[index]);            
+        // }
+        console.log('CARDS - ',res);
+        console.log('outer - ',this.eventCards)
+      })
+    }
 
+  
   showActiveTab(tag: any){
     this.eventTag = tag;
     this.showEventCards();
