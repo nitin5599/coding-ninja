@@ -29,7 +29,7 @@
                 <!-- events tabs starts -->
                 <div class="nav nav-pills" role="tablist" aria-orientation="vertical">                     
                     <a *ngFor="let tab of Tabs" (click)="showActiveTab(tab.value)" class="nav-link {{tab.status}}" id="{{tab.value}}-tab" data-toggle="pill" href="#{{tab.value}}" role="tab" aria-controls="features-tab-1" aria-selected="true">
-                        <h5 class="font-weight-600 mb-0">{{tab.name}}</h5>
+                        <h5  class="font-weight-600 mb-0">{{tab.name}}</h5>
                     </a>   
                 </div>
                 <!-- events tabs ends -->
@@ -38,9 +38,11 @@
 
             <!-- sub-categories starts -->
             <ul class="list-unstyled list-inline col-sm-8">
-                <li *ngFor="let ctg of subCtg; let i=index;"(click)="selectedSubCtg(ctg.value)" class="list-inline-item ">
-                    <div  class="chip me-0"  [class.selected]="ctg.value === selectedSubCtgId" >
-                        <p class="mb-0">{{ctg.name}}</p>
+                <li *ngFor="let ctg of subCtg; let i=index;" [ngStyle]="{'display':(eventTag == 'CODING_EVENT' && ctg.value === 'ALL_TIME_FAVORITES') ? 'none' : '' }" 
+                    (click)="selectedSubCtg(ctg.value)" class="list-inline-item ">
+                    <div class="chip me-0" [class.selected]="ctg.value === selectedSubCtgId" >
+                        <p *ngIf="ctg.value=='Archived'" class="mb-0">{{eventTag == 'WEBINAR' ? 'Recorded' : 'Archived'}}</p>
+                        <p *ngIf="ctg.value!='Archived'" class="mb-0">{{ctg.name}}</p>
                     </div>
                 </li>
             </ul>
@@ -73,9 +75,9 @@
 
                         <!-- event cards list starts-->
                         <div *ngFor="let card of eventCards | paginate: { id: 'events',
-                        itemsPerPage: 10,
+                        itemsPerPage: 20,
                         currentPage: Page,
-                        totalItems: TotalRecords }; let i=index"  class="col-md-4 tablink">
+                        totalItems: pageCount*max }; let i=index"  class="col-md-4 tablink">
                             
                             <div class="dtr-feature feature-has-shadow dtr-rounded-corner-xl bg-white">                   
                                 <div class="img-wrapper">
@@ -88,21 +90,26 @@
                                                 <p class="mb-0">Registrations <b>open</b> till <b>{{ card.registration_end_time*1000 | date:' d MMM, h:mm a' }}</b></p>
                                             </div>
                                         </div>
+                                        <div *ngIf="card.registration_status === 'REGISTRATIONS_CLOSED' && selectedSubCtgId == 'Upcoming'" class="upcoming">
+                                            <div class="d-flex align-items-center">
+                                                <p class="mb-0">Registrations <b>Closed</b></p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="dtr-feature-content">
                                     <div class="card-body">
                                         <h5 class="card-title">{{card.name}}</h5>
                                         <div class="d-flex justify-content-flex-start sub-head-row">
-                                            <div class="pr-4">
+                                            <div class="card-info">
                                                 <p class="sub-head mb-0">Starts on</p>
                                                 <p class="sub-head-des">{{ card.event_start_time*1000 | date:'h:mm a, d MMM y' }}</p>
                                             </div>
-                                            <div class="pr-4">
+                                            <div class="card-info">
                                                 <p class="sub-head mb-0">Entry Fee</p>
                                                 <p class="sub-head-des">{{card.currency}} {{card.fees}}</p>
                                             </div>
-                                            <div class="">
+                                            <div class="card-info">
                                                 <p class="sub-head mb-0">Venue</p>
                                                 <p class="sub-head-des">{{card.venue}}</p>
                                             </div>
@@ -162,8 +169,12 @@
 
                     <div class="row">
                         <div class="col-sm-12 d-flex justify-content-end" >
-                            <pagination-controls *ngIf="eventCards.length != 0" class=" my-pagination" id="events"
-                             (pageChange)="Page = $event" maxSize="10" directionLinks="true"></pagination-controls>
+                            <pagination-controls id="events"
+                            autoHide="true"
+                            responsive="true"
+                            previousLabel="Previous"
+                            nextLabel="Next"
+                             (pageChange)="Page = $event;" (click)="changeOffset()"  maxSize="5" directionLinks="true"></pagination-controls>
                         </div>
                     </div>
 

@@ -26,6 +26,8 @@
     "@ng-bootstrap/ng-bootstrap": "^6.2.0",
     "@ng-select/ng-option-highlight": "^0.0.6",
     "@ng-select/ng-select": "^7.0.0",
+    "@types/axios": "^0.14.0",
+    "axios": "^0.21.1",
     "bootstrap": "^5.0.1",
     "ngx-pagination": "^5.1.1",
     "rxjs": "~6.5.4",

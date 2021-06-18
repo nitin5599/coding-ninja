@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {FormControl} from '@angular/forms';
 
@@ -7,8 +7,8 @@ import {FormControl} from '@angular/forms';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
 
+export class AppComponent {
 
   tagsApi = 'https://api.codingninjas.com/api/v3/event_tags';
   listApi = 'https://api.codingninjas.com/api/v3/events';
@@ -22,9 +22,9 @@ export class AppComponent {
   ]
 
   subCtg:any[] = [
-    {name:'All Time Favorites', value:'ALL_TIME_FAVORITES', status:'active'},
-    {name:'Archived', value:'Archived', status:''},
-    {name:'Upcoming', value:'Upcoming', status:''},
+    {name:'Upcoming', value:'Upcoming'},
+    {name:'Archived', value:'Archived'},
+    {name:'All Time Favorites', value:'ALL_TIME_FAVORITES'}
   ]
 
   tags = new FormControl();
@@ -35,15 +35,17 @@ export class AppComponent {
   selectedSubCtgId: any = 'Upcoming';
   eventCards:any[] = [];
   activeSubCtgId: number;
-  pageCount;
+  pageCount=1;
   TotalRecords: any;
   Page = 1;
-  
+  offsetCount = 0;
+  max=20;
+
   constructor(private http: HttpClient) { 
     this.showEventCards();
   }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void{
      this.http.get<any>(this.tagsApi).subscribe((data: any) => {
         this.allTags = [...data.data.tags];
       },
@@ -51,25 +53,28 @@ export class AppComponent {
         console.error('There was an error!', error);
       }
     )
-  }
-
+  }   
+   
   showEventCards(){
-    this.http.get<any>(this.listApi+'?event_category='+this.eventTag+'&event_sub_category='+this.selectedSubCtgId+'&tag_list='+this.selectedTagIds+'&offset=0')    
+    this.http.get<any>(this.listApi+'?event_category='+this.eventTag+'&event_sub_category='+this.selectedSubCtgId+'&tag_list='+this.selectedTagIds+'&offset='+this.offsetCount)    
     .subscribe((res: any) =>{
-        this.pageCount = res.data.page_count;
-        this.TotalRecords = res.data.events.length;
-        this.eventCards=res.data.events
-      })
+      console.log(res)
+      this.pageCount = res.data.page_count; 
+      this.TotalRecords = res.data.events.length;
+      this.eventCards=res.data.events
+    })
   }
   
   showActiveTab(tag: any){
     this.eventTag = tag;
+    this.selectedSubCtgId = 'Upcoming'; 
+    console.log(this.eventTag)
+    this.Page = 1;
     this.showEventCards();
   }
 
   selectedTag(e:any){
     this.selectedTagIds.push(e);
-    // console.log('Tags - ',this.selectedTagIds);
     this.showEventCards();
   }
 
@@ -79,4 +84,9 @@ export class AppComponent {
     this.showEventCards();
   }
 
+  changeOffset(){
+    this.offsetCount = (this.Page-1)*this.max;
+    // console.log('offset count - ', this.offsetCount)
+    this.showEventCards();
+  }
 }
